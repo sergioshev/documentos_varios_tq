@@ -1,0 +1,54 @@
+Estos son algunos comandos útiles utilizando megacli
+
+- Ver el estado de los dispositivos físicos
+--{{{
+root@twister:~# megacli -PDList -a0 | grep -e Inquiry -e state -e Device
+Enclosure Device ID: 32
+Device Id: 0
+Firmware state: Unconfigured(good), Spun Up
+Device Firmware Level: D1K4
+Inquiry Data:         WCC1P0392523WD2000FYYX                              00.0D1K4
+Device Speed: 3.0Gb/s 
+Media Type: Hard Disk Device
+Enclosure Device ID: 32
+Device Id: 1
+Firmware state: Online, Spun Up
+Device Firmware Level: D1K4
+Inquiry Data:         WCC1P0395558WD2000FYYX                              00.0D1K4
+Device Speed: 3.0Gb/s 
+Media Type: Hard Disk Device
+Enclosure Device ID: 32
+Device Id: 2
+Firmware state: Online, Spun Up
+Device Firmware Level: D1K4
+Inquiry Data:         WCC1P0388464WD2000FYYX                              00.0D1K4
+Device Speed: 3.0Gb/s 
+Media Type: Hard Disk Device
+Enclosure Device ID: 32
+Device Id: 3
+Firmware state: Rebuild
+Device Firmware Level: D1K4
+Inquiry Data:         WCC1P0408748WD2000FYYX                              00.0D1K4
+Device Speed: 3.0Gb/s 
+Media Type: Hard Disk Device
+
+Acá se ve que el disp 0 está desconfigurado y el 3 se está reconstruyendo.
+--}}}
+
+- Setear un disco como Hot Spare
+--{{{
+root@twister:~# megacli -PDHSP -Set -PhysDrv [32:0] -a0
+                                     
+Adapter: 0: Set Physical Drive at EnclId-32 SlotId-0 as Hot Spare Success.
+
+Exit Code: 0x00
+--}}}
+
+- Ver el estado de la reconstrucción de un disco
+--{{{
+root@twister:~# megacli -PDRbld -ShowProg -PhysDrv [32:3] -a0
+                                     
+Rebuild Progress on Device at Enclosure 32, Slot 3 Completed 70% in 173 Minutes.
+
+Exit Code: 0x00
+--}}}

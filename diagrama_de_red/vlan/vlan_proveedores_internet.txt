@@ -1,0 +1,48 @@
+$Id: vlan_proveedores_internet.txt,v 1.1 2013-10-16 22:45:05 aosorio Exp $
+
+--------------------------------------------------------------------------------
+
+  Este documento muestra la configuración que se debe realizar en un Mikrotik
+RB750[G] para que funcione correctamente el balanceo de tráfico entre
+proveedores de internet. En este directorio puede encontrar el último backup de
+la configuración actual en un archivo con la forma <FECHA>.backup.
+
+--------------------------------------------------------------------------------
+
+Configuración de VLAN
+=====================
+
+ VLAN-ID |     VLAN-NAME       | INTERFACE
+---------+---------------------+----------
+ 1000    | vlan-administracion | ether1
+ 1040    | vlan-speedy         | ether1
+ 1050    | vlan-astesano       | ether1
+ 1060    | vlan-arnet          | ether1
+ 1070    | vlan-zonanet        | ether1
+
+Configuración de BRIDGE
+=======================
+
+      NAME       |     INTERFACES
+-----------------+----------------------
+ bridge-speedy   | ether5, vlan-speedy
+ bridge-astesano | ether3, vlan-astesano
+ bridge-arnet    | ether4, vlan-arnet
+ bridge-zonanet  | ether2, vlan-zonanet
+
+Direcciones IP
+==============
+
+   ADDRESS    |     INTERFACE
+--------------+--------------------
+ 192.168.88.1 | ether2
+ 192.168.90.1 | vlan-administracion
+
+Rutas estáticas
+===============
+
+  DST-ADDRESS   | PREF-SRC |   GATEWAY
+----------------+----------+--------------
+ 192.168.1.0/24 |          | 192.168.90.10*
+
+ * Esta es la dirección IP que se debe asignar en la interfaz eth4.1000 de euro.

@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# $Id: replicaDebian,v 1.1 2013-02-08 21:07:16 aosorio Exp $
+#
+# Script para sincronizar repositorio local contra los de Debian.
+#
+
+debmirror="/usr/bin/debmirror"
+mail="/usr/bin/mail"
+
+dest_mail="sistemas@terminalquequen.com.ar"
+asunto="Sincronizacion de repositorio local"
+
+dist="--dist squeeze"
+secciones="--section main,contrib,non-free"
+rep_local="/var/debmirror"
+
+# usados:
+# debian.torredehanoi.org
+#
+rep_remoto="--host ftp.ccc.uba.ar"
+rep_root="--root pub/linux/debian/debian"
+metodo_sinc="--method http"
+arquitecturas="--arch i386,amd64"
+sinc_timeout="--timeout 9999"
+opciones_extra="--verbose --nosource --postcleanup --ignore-missing-release"
+excluir="--exclude='/foo-doc_' --exclude-deb-section='^debug\$\'"
+
+lock_file=/var/tmp/sincRepositorio.lock
+
+function sincronizar
+{
+  $debmirror $rep_remoto $rep_root $metodo_sinc $dist $secciones \
+             $arquitecturas $sinc_timeout $excluir $opciones_extra \
+             "$rep_local" 2>&1
+}
+
+[ -a $lock_file ] && exit 0
+
+touch $lock_file
+
+## Modo 'verbose' (-v) o modo 'quiet'
+[ "$1" == "-v" ] && sincronizar || sincronizar > /dev/null
+
+rm -f $lock_file

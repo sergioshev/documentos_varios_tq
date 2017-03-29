@@ -1,0 +1,440 @@
+Etherpower DEFINITIONS ::= BEGIN
+
+IMPORTS
+   enterprises, IpAddress, Gauge, TimeTicks     FROM RFC1155-SMI
+   MacAddress					FROM SNMPv2-TC
+   DisplayString                                FROM RFC1213-MIB
+   OBJECT-TYPE                                  FROM RFC-1212
+   TRAP-TYPE                                    FROM RFC-1215;
+
+etherpower                           OBJECT IDENTIFIER ::=  { enterprises 38815 }
+
+trapNotifications                  OBJECT IDENTIFIER ::=  { etherpower 0 }
+product                            OBJECT IDENTIFIER ::=  { etherpower 1 }
+setup                               OBJECT IDENTIFIER ::=  { etherpower 2 }
+monitorNcontrol                     OBJECT IDENTIFIER ::=  { etherpower 3 }
+
+ON-OFF ::=  INTEGER { ON(1), OFF(0) }
+RISING-FALLING ::= INTEGER { RISING(1), FALLING(0) }
+CONTROLLED ::= INTEGER { ANYALERT(1), MANUAL(0) }
+ACTION ::= INTEGER { SENDMAIL(1), NOACTION(0) }
+
+
+name    OBJECT-TYPE
+   SYNTAX DisplayString
+   ACCESS read-only
+   STATUS mandatory
+   DESCRIPTION
+      "Name of product. e.g. etherpower.cc etc."
+   ::= { product 1 }
+   
+
+version    OBJECT-TYPE
+   SYNTAX DisplayString
+   ACCESS read-only
+   STATUS mandatory
+   DESCRIPTION
+      "Version string. e.g. 1.0"
+   ::= { product 2 }
+   
+date    OBJECT-TYPE
+   SYNTAX DisplayString
+   ACCESS read-only
+   STATUS mandatory
+   DESCRIPTION
+      "Date of version"
+   ::= { product 3 }
+
+network                             	OBJECT IDENTIFIER ::=  { setup 1 }
+SNMP                             		OBJECT IDENTIFIER ::=  { setup 5 }
+humidity                           		OBJECT IDENTIFIER ::=  { setup 6 }
+temperature                        		OBJECT IDENTIFIER ::=  { setup 7 }
+digitalInput                        	OBJECT IDENTIFIER ::=  { setup 8 }
+relay	                        		OBJECT IDENTIFIER ::=  { setup 9 }
+
+
+deviceIPAddress OBJECT-TYPE
+    SYNTAX  IpAddress
+    ACCESS  read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Device IP address"
+    ::= { network 1 }
+
+
+subnetMask OBJECT-TYPE
+    SYNTAX  IpAddress
+    ACCESS  read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Subnet Mask"
+    ::= { network 2 }
+
+gateway OBJECT-TYPE
+    SYNTAX  IpAddress
+    ACCESS  read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Gateway IP address"
+    ::= { network 3 }
+
+deviceMACAddress OBJECT-TYPE
+    SYNTAX  MacAddress
+    ACCESS  read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Device MAC address"
+    ::= { network 4 }
+
+dhcpConfig OBJECT-TYPE
+    SYNTAX INTEGER { ON(1), OFF(0) }
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION 
+        "DHCP configuration ON/OFF"
+    ::= { network 5 }
+	
+trapEnabled OBJECT-TYPE
+    SYNTAX INTEGER { Yes(1), No(0) }
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Indicates if this trap entry is enabled or not."
+    ::= { SNMP 4 }
+
+
+trapReceiverIPAddress OBJECT-TYPE
+    SYNTAX  IpAddress
+    ACCESS  read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Trap receiver IP address"
+    ::= { SNMP 5 }
+
+trapCommunity OBJECT-TYPE
+    SYNTAX  DisplayString (SIZE (0..13))
+    ACCESS  read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Trap community to be used by agent to send trap"
+    ::= { SNMP 6 }
+
+trapInterval OBJECT-TYPE
+    SYNTAX UNSIGNED-INTEGER (1..253)
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION 
+        "Trap Interval"
+    ::= { SNMP 7 }
+
+maxNumberOfTraps OBJECT-TYPE
+    SYNTAX UNSIGNED-INTEGER (1..253)
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION 
+        "Max Number of Traps"
+    ::= { SNMP 8 }
+
+humidityMAXx10Int OBJECT-TYPE
+    SYNTAX  INTEGER (0..1000)
+    ACCESS  read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Humidity maximum"
+    ::= { humidity 2 }
+	
+
+humidityAction OBJECT-TYPE
+    SYNTAX  ACTION
+    ACCESS  read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Humidity Action"
+    ::= { humidity 4 }
+
+humidityTo  OBJECT-TYPE
+    SYNTAX  DisplayString (SIZE (0..38))
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Humidity Destination e-mail address"
+    ::= { humidity 5 }
+
+humiditySubject  OBJECT-TYPE
+    SYNTAX  DisplayString (SIZE (0..10))
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Humidity e-mail subject"
+    ::= { humidity 6 }
+
+
+temperatureMINx10Int OBJECT-TYPE
+    SYNTAX  INTEGER (-400..1250)
+    ACCESS  read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Temperature minimum"
+    ::= { temperature 1 }
+	
+temperatureMAXx10Int OBJECT-TYPE
+    SYNTAX  INTEGER (-400..1250)
+    ACCESS  read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Temperature maximum"
+    ::= { temperature 2 }
+
+temperatureAction OBJECT-TYPE
+    SYNTAX  ACTION
+    ACCESS  read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Temperature Action"
+    ::= { temperature 4 }
+
+temperatureTo  OBJECT-TYPE
+    SYNTAX  DisplayString (SIZE (0..38))
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Temperature Destination e-mail address"
+    ::= { temperature 5 }
+
+temperatureSubject  OBJECT-TYPE
+    SYNTAX  DisplayString (SIZE (0..10))
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Temperature e-mail subject"
+    ::= { temperature 6 }
+
+--digitalInput
+
+digitalInputAction OBJECT-TYPE
+    SYNTAX  ACTION
+    ACCESS  read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Digital Input Action"
+    ::= { digitalInput 1 }
+
+digitalInputEdge OBJECT-TYPE
+    SYNTAX  RISING-FALLING
+    ACCESS  read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Digital Input Edge"
+    ::= { digitalInput 2 }
+
+digitalInputTo  OBJECT-TYPE
+    SYNTAX  DisplayString (SIZE (0..38))
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Digital Input Destination e-mail address"
+    ::= { digitalInput 3 }
+
+digitalInputSubject  OBJECT-TYPE
+    SYNTAX  DisplayString (SIZE (0..10))
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Digital Inpput e-mail subject"
+    ::= { digitalInput 4 }
+
+digitalInputBody  OBJECT-TYPE
+    SYNTAX  DisplayString (SIZE (0..21))
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Digital Input e-mail body"
+    ::= { digitalInput 5 }
+
+relayControl OBJECT-TYPE
+    SYNTAX  CONTROLLED
+    ACCESS  read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Relay Control Item"
+    ::= { relay 1 }
+	
+relayPulseWidth OBJECT-TYPE
+    SYNTAX INTEGER (1..253)
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION 
+        "Relay Pulse Width"
+    ::= { relay 2 }
+
+-- control   
+
+--relays								OBJECT IDENTIFIER ::=  { monitor 1 }
+--analogs								OBJECT IDENTIFIER ::=  { monitor 2 }
+--digitalInputs						OBJECT IDENTIFIER ::=  { monitor 3 }
+
+
+digitalInputState OBJECT-TYPE
+    SYNTAX INTEGER { ON(1), OFF(0) }
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION 
+        "Digital Input State"
+    ::= { monitorNcontrol 1 }
+
+relayState OBJECT-TYPE
+    SYNTAX INTEGER { ON(1), OFF(0) }
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION 
+        "Relay State"
+    ::= { monitorNcontrol 2 }
+
+relayPulse OBJECT-TYPE
+    SYNTAX INTEGER { ON(1), OFF(0) }
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION 
+        "Relay Pulse"
+    ::= { monitorNcontrol 3 }
+
+tempx10Int OBJECT-TYPE
+	SYNTAX INTEGER (-400..1750)
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Temperature x10 in Integer format"
+	::= { monitorNcontrol 5 }
+   
+humix10Int OBJECT-TYPE
+    SYNTAX INTEGER (0..65000)
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION 
+        "Humidity x10 in Integer format"
+    ::= { monitorNcontrol 7 }
+
+
+temp1x10Int OBJECT-TYPE
+	SYNTAX INTEGER (-400..1750)
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Temperature 1 x10 in Integer format"
+	::= { monitorNcontrol 8 }
+
+humi1x10Int OBJECT-TYPE
+    SYNTAX INTEGER (0..65000)
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION 
+        "Humidity 1 x10 in Integer format"
+    ::= { monitorNcontrol 9 }
+	
+temp2x10Int OBJECT-TYPE
+	SYNTAX INTEGER (-400..1750)
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Temperature 2 x10 in Integer format"
+	::= { monitorNcontrol 10 }
+
+humi2x10Int OBJECT-TYPE
+    SYNTAX INTEGER (0..65000)
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION 
+        "Humidity 2 x10 in Integer format"
+    ::= { monitorNcontrol 11 }
+	
+temp3x10Int OBJECT-TYPE
+	SYNTAX INTEGER (-400..1750)
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Temperature 3 x10 in Integer format"
+	::= { monitorNcontrol 12 }
+
+humi3x10Int OBJECT-TYPE
+    SYNTAX INTEGER (0..65000)
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION 
+        "Humidity 3 x10 in Integer format"
+    ::= { monitorNcontrol 13 }
+	
+temp4x10Int OBJECT-TYPE
+	SYNTAX INTEGER (-400..1750)
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Temperature 4 x10 in Integer format"
+	::= { monitorNcontrol 14 }
+
+humi4x10Int OBJECT-TYPE
+    SYNTAX INTEGER (0..65000)
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION 
+        "Humidity 4 x10 in Integer format"
+    ::= { monitorNcontrol 15 }
+	
+temp5x10Int OBJECT-TYPE
+	SYNTAX INTEGER (-400..1750)
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Temperature 5 x10 in Integer format"
+	::= { monitorNcontrol 16 }
+
+humi5x10Int OBJECT-TYPE
+    SYNTAX INTEGER (0..65000)
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION 
+        "Humidity 5 x10 in Integer format"
+    ::= { monitorNcontrol 17 }
+	
+temp6x10Int OBJECT-TYPE
+	SYNTAX INTEGER (-400..1750)
+	ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"Temperature 6 x10 in Integer format"
+	::= { monitorNcontrol 18 }
+
+humi6x10Int OBJECT-TYPE
+    SYNTAX INTEGER (0..65000)
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION 
+        "Humidity 6 x10 in Integer format"
+    ::= { monitorNcontrol 19 }
+	
+-- inputs	
+
+--- configurationSaved
+configurationSaved OBJECT-TYPE
+	SYNTAX INTEGER { SAVED(1), UNSAVED(0) }
+	ACCESS read-write
+	STATUS mandatory
+	DESCRIPTION
+		"Configuration save status SAVED/UNSAVED"
+	::= { monitorNcontrol 20 }
+
+restartDevice OBJECT-TYPE
+	SYNTAX INTEGER { RESTART(1), CANCEL(0) }
+	ACCESS read-write
+	STATUS mandatory
+	DESCRIPTION
+		"Restart Device"
+	::= { monitorNcontrol 21 }
+	
+snmp-trap-notification NOTIFICATION-TYPE
+	OBJECTS { digitalInputState, tempx10Int, humix10Int, restartDevice}
+	STATUS current
+	DESCRIPTION 
+		"SMIV2 Trap notification information for the SNMP Manager."
+	::= {trapNotifications 1}
+
+END

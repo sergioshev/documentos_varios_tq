@@ -1,0 +1,5 @@
+Nombres de enlaces
+
+origen-destino-frecuencia-[p|sn]
+	donde p es primario, s es secundario y n es
+	el número de enlace secundario (por si hay más de uno).

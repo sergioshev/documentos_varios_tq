@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+# $Id: replicaMint,v 1.1 2013-02-08 21:07:17 aosorio Exp $
+#
+# Script para mantener actualizado un repositorio de Linux Mint.
+#
+
+mirror=packages.linuxmint.com
+mirror_root=packages
+local_mirror=/backup/debmirror/mint
+dists='--dist nadia'
+sections='--section main,upstream,import'
+archs='--arch i386,amd64'
+exclude="--exclude=/foo-doc_ --exclude-deb-section='^debug\$'"
+lock_file="/var/lock/$( basename $0 ).lock"
+extra_options='--verbose --nosource --postcleanup --ignore-missing-release'
+
+[ -d "$local_mirror" ] || install -m 775 -d $local_mirror
+
+[ -a "$lock_file" ] && {
+  echo -e "\n¡Existe un bloqueo pendiente! ($lock_file)\n"
+  exit 1
+}
+
+touch $lock_file
+
+/usr/bin/debmirror --host $mirror --root $mirror_root --method rsync $sections $dists $archs $extra_options $local_mirror 
+
+mirror=archive.ubuntu.com
+mirror_root=ubuntu
+local_mirror=/backup/debmirror/ubuntu
+dists='--dist quantal'
+sections='--section main,restricted,universe,multiverse'
+
+[ -d "$local_mirror" ] || install -m 775 -d $local_mirror
+
+/usr/bin/debmirror --host $mirror --root $mirror_root --method rsync $sections $dists $archs $extra_options $local_mirror 
+
+rm -f $lock_file
+

@@ -1,0 +1,28 @@
+INTRODUCCIÓN
+------------
+
+  Este archivo contiene una descripción de las réplicas de GNU/Linux que se
+tienen en la empresa.
+
+Réplica de Linux Debian
+-----------------------
+
+  - Arquitecturas: i386, amd64
+  - Distribuciones: Squeeze
+  - Secciones: main, contrib, non-free
+  - Locación: Servidor eloso, /var/debmirror
+  - Script: replicaDebian
+  - Líneas para sources.list:
+	deb http://eloso.terminalquequen.com.ar/debian/ squeeze main contrib non-free
+
+Réplica de Linux Mint
+---------------------
+
+  - Arquitecturas: i386, amd64
+  - Distribuciones: Nadia
+  - Secciones: main, upstream, import
+  - Locación: pcsistemas, /backups/debmirror
+  - Script: replicaMint
+  - Líneas para sources.list:
+	deb http://replicamint.terminalquequen.com.ar/mint/ nadia main upstream import
+	deb http://replicamint.terminalquequen.com.ar/ubuntu/ quantal main restricted universe multiverse

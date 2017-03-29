@@ -1,0 +1,22 @@
+Aca se pone la informacion relevante en cuanto a la compra del 
+certificado ssl wildcard.
+
+A la hora de escribir este documento se eligio NameCheap.com
+como entidad emisora del certificado.
+
+https://www.namecheap.com
+
+Se registro el usuario sistemastqq con la clave &T3rm1n4l123%
+el email asociado es sistemas@terminalquequen.com.ar.
+
+Se describen los paso previos a la solicitud.
+*) asegurase de aceptar correo en postmaster@terminalquequen.com.ar
+*) generar la clave (ya estaba generada de antes, lo pongo a saber)
+openssl genrsa -des3 -out www.terminalquequen.com.ar.key  4096
+
+*) generar CSR con firma SHA2 y *.terminalquequen.com.ar en CN.
+openssl req -new -sha256 -key www.terminalquequen.com.ar.key -out www.terminalquequen.com.ar.csr
+
+*) enviar el CSR al CA.
+*) Recibir el certificado, posiblemente manden los certificados intermedios.
+
